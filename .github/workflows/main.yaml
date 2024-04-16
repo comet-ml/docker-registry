@@ -29,8 +29,8 @@ jobs:
       uses: azure/setup-helm@v4.2.0
       id: install
 
-    - name: Run chart-releaser
-      uses: helm/chart-releaser-action@v1.6.0
-      env:
-        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    - name: Publish Helm charts
+      uses: stefanprodan/helm-gh-pages@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
