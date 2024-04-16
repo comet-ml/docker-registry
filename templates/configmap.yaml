@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "docker-registry.fullname" . }}-config
+  labels:
+    app: {{ template "docker-registry.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+data:
+  config.yml: |-
+    version: 0.1
+    log:
+      fields:
+        service: registry
+    {{- with .Values.storage }}
+    storage:
+      {{ . | toYaml | nindent 6 }}
+    {{- end }}
+    http:
+      addr: :{{ .Values.service.port }}
+      headers:
+        X-Content-Type-Options: [nosniff]
+      relativeurls: true
+      {{- with .Values.metrics }}
+      debug:
+        addr: :{{ .port }}
+        prometheus:
+          enabled: {{ .enabled }}
+          path: /metrics
+      {{- end }}
+    health:
+      storagedriver:
+        enabled: true
+        interval: 10s
+        threshold: 3

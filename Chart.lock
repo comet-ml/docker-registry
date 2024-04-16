@@ -1,0 +1,6 @@
+dependencies:
+- name: docker-registry
+  repository: https://phntom.kix.co.il/charts/
+  version: 1.10.0
+digest: sha256:ce5f7b8d549b25a06ff7cf9b75b5df25d1f6940d7eb4ed53905cdfa6bc2754be
+generated: "2024-04-15T10:58:22.310738367+02:00"

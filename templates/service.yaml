@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "docker-registry.fullname" . }}
+  labels:
+    {{- include "docker-registry.labels" . | nindent 4 }}
+  #   {{- with .Values.metrics.labels }}
+  #   {{- . | toYaml | nindent 4 }}
+  #   {{- end }}
+  # 
+  #   prometheus.io/scrape: "{{ .Values.metrics.enabled }}"
+  #   prometheus.io/port: "{{ .Values.metrics.port }}"
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- . | toYaml | nindent 4}}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    {{- if .Values.metrics.enabled }}
+    - port: {{ .Values.metrics.port }}
+      targetPort:  {{ .Values.metrics.port }}
+      protocol: TCP
+      name: metrics-port
+    {{- end }}
+  selector:
+    {{- include "docker-registry.selectorLabels" . | nindent 4 }}
